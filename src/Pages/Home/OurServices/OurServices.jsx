@@ -50,10 +50,9 @@ const OurServices = () => {
             alt="Cash on Delivery"
             className="mx-auto block mb-4 w-12 h-12 object-contain"
           />
-          <h2 className="font-bold text-lg mb-2">Cash on Delivery</h2>
+          <h2 className="font-bold text-lg mb-2">Fulfillment Solution</h2>
           <p className="text-sm">
-            Offer your customers the convenience of cash on delivery, increasing
-            trust and boosting your sales across Bangladesh.
+            We also offer customized service with inventory management support, online order processing, packaging, and after sales support.
           </p>
         </div>
         {/* Card 4 */}
@@ -63,10 +62,9 @@ const OurServices = () => {
             alt="Warehousing"
             className="mx-auto block mb-4 w-12 h-12 object-contain"
           />
-          <h2 className="font-bold text-lg mb-2">Warehousing</h2>
+          <h2 className="font-bold text-lg mb-2">Cash on Home Delivery</h2>
           <p className="text-sm">
-            Secure storage solutions for your inventory, with real-time stock
-            management and fast dispatch to your customers.
+          100% cash on delivery anywhere in Bangladesh with guaranteed safety of your product.
           </p>
         </div>
         {/* Card 5 */}
@@ -76,10 +74,9 @@ const OurServices = () => {
             alt="Reverse Logistics"
             className="mx-auto block mb-4 w-12 h-12 object-contain"
           />
-          <h2 className="font-bold text-lg mb-2">Reverse Logistics</h2>
+          <h2 className="font-bold text-lg mb-2">Corporate Service / Contract In Logistics</h2>
           <p className="text-sm">
-            Easy returns and exchanges for your customers, making your service
-            more reliable and customer-friendly.
+            Customized corporate services which includes warehouse and inventory management support.
           </p>
         </div>
         {/* Card 6 */}
@@ -89,10 +86,9 @@ const OurServices = () => {
             alt="Corporate Solutions"
             className="mx-auto block mb-4 w-12 h-12 object-contain"
           />
-          <h2 className="font-bold text-lg mb-2">Corporate Solutions</h2>
+          <h2 className="font-bold text-lg mb-2">Parcel Return</h2>
           <p className="text-sm">
-            Tailored delivery and logistics solutions for SMEs and large
-            enterprises, supporting your business growth at every stage.
+            Through our reverse logistics facility we allow end customers to return or exchange their products with online business merchants.
           </p>
         </div>
       </div>
