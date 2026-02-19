@@ -8,6 +8,7 @@ import casio from '../../.../../../assets/brands/casio.png'
 import start from '../../../assets/brands/start.png'
 import randstad from '../../../assets/brands/randstad.png'
 import startpeople from '../../../assets/brands/start-people 1.png'
+import { Autoplay } from "swiper/modules";
 
 const barndsLogo =[
   amazon,
@@ -21,12 +22,17 @@ const barndsLogo =[
 
 const Brands = () => {
   return (
-    <Swiper
+    <Swiper className="mt-10 mb-10"
     loop={true}
      slidesPerView={4}
         centeredSlides={true}
         spaceBetween={30}
-        grabCursor={true}>
+        grabCursor={true}
+        modules={[Autoplay]}
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}>
           {
             barndsLogo.map((logo,index)=><SwiperSlide key={index}><img src={logo} alt="brand logo"/></SwiperSlide>)
           }
