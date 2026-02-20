@@ -22,7 +22,11 @@ const barndsLogo =[
 
 const Brands = () => {
   return (
-    <Swiper className="mt-10 mb-10"
+    <div>
+      <div>
+        <h1 className="text-secondary text-2xl font-bold text-center">We've helped thousands of sales teams</h1>
+      </div>
+      <Swiper className="mt-10 mb-10"
     loop={true}
      slidesPerView={4}
         centeredSlides={true}
@@ -39,6 +43,7 @@ const Brands = () => {
       
       
     </Swiper>
+    </div>
   );
 };
 
