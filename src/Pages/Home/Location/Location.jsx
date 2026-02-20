@@ -9,7 +9,7 @@ const Location = () => {
                         <p className='text-white text-1xl mb-5'>We offer the lowest delivery charge with <br /> the highest value along with 100% safety of your product. Pathao courier delivers your parcels in every corner of Bangladesh right on time.</p>
                         <div className=''>
                               <button className='btn bg-[#CAEB66] rounded-full p-5 m-5 text-black font-bold'>Become a Merchant</button>
-                              <button className='btn bg-accent-content text-yellow-400 rounded-full p-5 m-5 text-white font-bold'>Earn with Profast Courier</button>
+                              <button className='btn bg-accent-content text-yellow-400 rounded-full p-5 m-5font-bold'>Earn with Profast Courier</button>
                         </div>
 
                   </div>
