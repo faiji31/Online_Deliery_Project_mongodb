@@ -7,6 +7,7 @@ import OurServices1 from '../OurServies1/OurServices1';
 import Location from '../Location/Location';
 import CustomerSaying from '../CustomerSaying/CustomerSaying';
 import Reviews from '../Reviews/Reviews';
+import Question from '../Question/Question';
 
 
 
@@ -23,6 +24,7 @@ const Home = () => {
                   <Location></Location>
                   <CustomerSaying></CustomerSaying>
                   <Reviews ReviewsPromise={ReviewsPromise}></Reviews>
+                  <Question></Question>
             </div>
       );
 };

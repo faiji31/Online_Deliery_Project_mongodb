@@ -2,7 +2,7 @@ import React from 'react';
 import { FaQuoteLeft } from 'react-icons/fa';
 
 const ReviewCard = ({reviews}) => {
-      const {userName,userPhotoURL,date,review} = reviews
+      const {userName,user_PhotoURL,date,review} = reviews
       return (
             <div>
                   <div className="max-w-md mx-auto">
@@ -25,7 +25,7 @@ const ReviewCard = ({reviews}) => {
     
           <div className="avatar placeholder">
             <div className="bg-primary text-primary-content rounded-full w-12">
-              <span className="text-lg font-semibold">{userPhotoURL}</span>
+             <img src={user_PhotoURL} alt="" />
             </div>
           </div>
 
