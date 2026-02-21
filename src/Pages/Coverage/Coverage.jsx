@@ -22,9 +22,11 @@ const handleserarch =e=>{
 
   return (
     <div>
-      <h1 className="text-4xl text-secondary font-bold">
+      <h1 className="text-4xl text-secondary font-bold my-10">
         We are available in 64 districts
       </h1>
+
+      <p className="text-black my-10">We deliver almost all over Bangladesh</p>
       <form onSubmit={handleserarch}>
             <label className="input">
   <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
