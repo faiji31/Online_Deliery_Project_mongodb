@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import useAuth from '../../../hooks/useAuth';
 import { Link } from 'react-router';
+import SocialLogin from '../SocialLogin/SocialLogin';
 
 
 
@@ -40,6 +41,7 @@ const handleRegistration =(data)=>{
         </fieldset>
         <p>Already have an account <Link className='text-blue-400 underline' to='/login'>Login</Link></p>
       </form>
+      <SocialLogin></SocialLogin>
     </div>
   );
 };
