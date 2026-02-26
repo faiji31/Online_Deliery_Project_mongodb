@@ -1,71 +1,132 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import useAuth from '../../../hooks/useAuth';
-import { Link } from 'react-router';
+import { Link, useNavigate, useLocation } from 'react-router';
 import SocialLogin from '../SocialLogin/SocialLogin';
 import axios from 'axios';
 
-
-
 const Register = () => {
-  const { registerUser} =useAuth();
-  const {register, handleSubmit , formState:{errors}} = useForm();
-const handleRegistration =(data)=>{
-  console.log('after register',data.Photo[0])
-  const ProfileImage = data.Photo[0]
-  registerUser(data.email,data.password)
-  .then(result =>{
-    console.log(result.user)
-    const formData = new FormData()
-    formData.append('image', ProfileImage)
+  const { registerUser, updateuserProfile } = useAuth();
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  const handleRegistration = (data) => {
+    const profileImage = data.Photo[0];
 
-    const image_API_URL=`https://api.imgbb.com/1/upload?&key=${import.meta.env.VITE_image_host_key}`
+    registerUser(data.email, data.password)
+      .then(result => {
+        const formData = new FormData();
+        formData.append('image', profileImage);
+        console.log(result)
 
-    axios.post(image_API_URL,formData)
-    .then(res=>{
-      console.log('after image upload', res.data)
+        const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`;
 
-    })
-  })
-  .catch(error=>{
-    console.log(error)
-  })
+        axios.post(image_API_URL, formData)
+          .then(res => {
 
-}
+            const userProfile = {
+              displayName: data.name,
+              photoURL: res.data.data.url
+            };
+
+            updateuserProfile(userProfile)
+              .then(() => {
+                navigate(location?.state || '/');
+              })
+              .catch(error => console.log(error));
+
+          });
+      })
+      .catch(error => console.log(error));
+  };
+
   return (
-    <div className="card bg-base-100 w-full mx-auto max-w-sm shrink-0 shadow-2xl">
-      <h3 className='text-3xl  text-center'>Please Register Here</h3>
-      <form className='card-body' onSubmit={handleSubmit(handleRegistration)}>
-        <fieldset className="fieldset">
-          <label className="label">Email</label>
-          <input type="email" {...register('email',{required: true})} className="input" placeholder="Email" />
-          {errors.email?.type =='required' &&  <p className='text-red-500'>Email is required</p>}
+    <div className="min-h-screen flex items-center justify-center bg-base-200 px-4 sm:px-6 lg:px-8">
+      
+      <div className="card w-full max-w-md shadow-2xl bg-base-100">
+        <h3 className="text-2xl sm:text-3xl font-bold text-center pt-6">
+          Please Register Here
+        </h3>
 
-           <label className="label">Name</label>
-          <input type="text" {...register('name',{required: true})} className="input" placeholder="Your Name" />
-          {errors.name?.type =='required' &&  <p className='text-red-500'>Your Name is required</p>}
+        <form className="card-body" onSubmit={handleSubmit(handleRegistration)}>
+          <fieldset className="space-y-3">
 
+            {/* Email */}
+            <div>
+              <label className="label">Email</label>
+              <input
+                type="email"
+                {...register('email', { required: true })}
+                className="input input-bordered w-full"
+                placeholder="Email"
+              />
+              {errors.email?.type === 'required' &&
+                <p className="text-red-500 text-sm">Email is required</p>}
+            </div>
 
-          <label className="label">Photo</label>
-          <input type="file" {...register('Photo',{required: true})} className="file-input" placeholder="Your Photo" />
-          {errors.name?.type =='required' &&  <p className='text-red-500'>Your Photo is required</p>}
+            {/* Name */}
+            <div>
+              <label className="label">Name</label>
+              <input
+                type="text"
+                {...register('name', { required: true })}
+                className="input input-bordered w-full"
+                placeholder="Your Name"
+              />
+              {errors.name?.type === 'required' &&
+                <p className="text-red-500 text-sm">Your Name is required</p>}
+            </div>
 
+            {/* Photo */}
+            <div>
+              <label className="label">Photo</label>
+              <input
+                type="file"
+                {...register('Photo', { required: true })}
+                className="file-input file-input-bordered w-full"
+              />
+              {errors.Photo &&
+                <p className="text-red-500 text-sm">Your Photo is required</p>}
+            </div>
 
-          <label className="label">Password</label>
-          <input type="password" {...register('password',{required: true,
-          minLength:6})} className="input" placeholder="Password" />
-          <div><a className="link link-hover">Forgot password?</a></div>
+            {/* Password */}
+            <div>
+              <label className="label">Password</label>
+              <input
+                type="password"
+                {...register('password', { required: true, minLength: 6 })}
+                className="input input-bordered w-full"
+                placeholder="Password"
+              />
+              {errors.password?.type === 'required' &&
+                <p className="text-red-500 text-sm">Password is required</p>}
+              {errors.password?.type === 'minLength' &&
+                <p className="text-red-500 text-sm">Password minimum length is 6</p>}
+            </div>
 
-           {errors.password?.type =='required' &&  <p className='text-red-500'>Password is required</p>}
-           {
-            errors.password?.type ==='minLength' && <p className='text-red-500'>Password minimum length is 6</p>
-           }
-          <button className="btn btn-neutral mt-4">Register</button>
-        </fieldset>
-        <p>Already have an account <Link className='text-blue-400 underline' to='/login'>Login</Link></p>
-      </form>
-      <SocialLogin></SocialLogin>
+            <button className="btn btn-neutral w-full mt-4">
+              Register
+            </button>
+
+          </fieldset>
+
+          <p className="text-center text-sm mt-3">
+            Already have an account?{" "}
+            <Link
+              state={location?.state}
+              className="text-blue-500 underline"
+              to="/login"
+            >
+              Login
+            </Link>
+          </p>
+        </form>
+
+        <div className="px-6 pb-6">
+          <SocialLogin />
+        </div>
+      </div>
     </div>
   );
 };
