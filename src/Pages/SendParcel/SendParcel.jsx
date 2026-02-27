@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useLoaderData } from "react-router";
 import Swal from "sweetalert2";
+import Useaxiossecure from "../../hooks/Useaxiossecure";
 
 const SendParcel = () => {
   const {
@@ -11,6 +12,11 @@ const SendParcel = () => {
     setValue,
     formState: { errors },
   } = useForm();
+
+
+  const AxiosSecure = Useaxiossecure();
+
+
 
   const serviceCenters = useLoaderData() || [];
 
@@ -62,6 +68,11 @@ const SendParcel = () => {
   confirmButtonText: "I Agreee!"
 }).then((result) => {
   if (result.isConfirmed) {
+
+    AxiosSecure.post('/parcels', data)
+    .then(res=>{
+      console.log(res.data)
+    })
     // Swal.fire({
     //   title: "Deleted!",
     //   text: "Your file has been deleted.",
