@@ -1,8 +1,9 @@
-import React, { use, useEffect } from "react";
+import React, {  useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useLoaderData } from "react-router";
 import Swal from "sweetalert2";
 import Useaxiossecure from "../../hooks/Useaxiossecure";
+import useAuth from '../../hooks/useAuth'
 
 const SendParcel = () => {
   const {
@@ -12,6 +13,8 @@ const SendParcel = () => {
     setValue,
     formState: { errors },
   } = useForm();
+
+  const {user} = useAuth()
 
 
   const AxiosSecure = Useaxiossecure();
@@ -192,6 +195,7 @@ const SendParcel = () => {
               {...register("sendername", { required: true })}
               className="input input-bordered w-full mb-4"
               placeholder="Sender Name"
+              defaultValue={user?.name}
             />
 
             <input
@@ -199,6 +203,7 @@ const SendParcel = () => {
               {...register("senderemail", { required: true })}
               className="input input-bordered w-full mb-4"
               placeholder="Sender Email"
+              defaultValue={user?.email}
             />
 
             <input
