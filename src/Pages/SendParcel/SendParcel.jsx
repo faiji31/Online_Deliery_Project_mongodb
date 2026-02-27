@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useLoaderData } from "react-router";
+import Swal from "sweetalert2";
 
 const SendParcel = () => {
   const {
@@ -11,29 +12,84 @@ const SendParcel = () => {
     formState: { errors },
   } = useForm();
 
-  const ServiceCenter = useLoaderData();
+  const serviceCenters = useLoaderData() || [];
 
+  // ===============================
+  // HANDLE FORM SUBMIT
+  // ===============================
   const handleParcel = (data) => {
     console.log(data);
+
+    const isDocument = data.parcelType === "document";
+    const isSameDistrict =
+      data.senderdistrict === data.receiverdistrict;
+
+    const parcelWeight = parseFloat(data.parcelweight) || 0;
+
+    let cost = 0;
+
+    // ===== DOCUMENT =====
+    if (isDocument) {
+      cost = isSameDistrict ? 60 : 80;
+    }
+
+    // ===== NON-DOCUMENT =====
+    else {
+      if (parcelWeight <= 3) {
+        cost = isSameDistrict ? 110 : 150;
+      } else {
+        const baseCharge = isSameDistrict ? 110 : 150;
+        const extraWeight = parcelWeight - 3;
+
+        const extraCharge = isSameDistrict
+          ? extraWeight * 40
+          : extraWeight * 40 + 40;
+
+        cost = baseCharge + extraCharge;
+      }
+    }
+
+    console.log("Total Cost:", cost);
+   
+
+    Swal.fire({
+  title: "Agree with The cost?",
+  text: `You Will be Charge! ${cost}`,
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "I Agreee!"
+}).then((result) => {
+  if (result.isConfirmed) {
+    // Swal.fire({
+    //   title: "Deleted!",
+    //   text: "Your file has been deleted.",
+    //   icon: "success"
+    // });
+  }
+});
   };
 
   // ===============================
-  // Unique Regions
+  // UNIQUE REGIONS
   // ===============================
-  const regions = [...new Set(ServiceCenter.map((c) => c.region))];
+  const regions = [
+    ...new Set(serviceCenters.map((c) => c.region)),
+  ];
 
   // ===============================
-  // Watch Regions
+  // WATCH REGIONS
   // ===============================
   const senderRegion = watch("senderregion");
   const receiverRegion = watch("receiverregion");
 
   // ===============================
-  // Get District By Region
+  // GET DISTRICTS BY REGION
   // ===============================
   const districtByRegion = (region) => {
     if (!region) return [];
-    return ServiceCenter
+    return serviceCenters
       .filter((c) => c.region === region)
       .map((c) => c.district);
   };
@@ -42,7 +98,7 @@ const SendParcel = () => {
   const receiverDistricts = districtByRegion(receiverRegion);
 
   // ===============================
-  // Reset district when region changes
+  // RESET DISTRICT WHEN REGION CHANGES
   // ===============================
   useEffect(() => {
     setValue("senderdistrict", "");
@@ -100,9 +156,12 @@ const SendParcel = () => {
             className="input input-bordered w-full"
             placeholder="Parcel Name"
           />
+
           <input
             type="number"
-            {...register("parcelweight")}
+            step="0.1"
+            min="0"
+            {...register("parcelweight", { required: true })}
             className="input input-bordered w-full"
             placeholder="Parcel Weight (KG)"
           />
@@ -138,26 +197,28 @@ const SendParcel = () => {
               placeholder="Sender Address"
             />
 
-            {/* Sender Region */}
             <select
               {...register("senderregion", { required: true })}
               className="select select-bordered w-full mb-4"
             >
               <option value="">Select Region</option>
-              {regions.map((r, i) => (
-                <option key={i} value={r}>{r}</option>
+              {regions.map((region, index) => (
+                <option key={index} value={region}>
+                  {region}
+                </option>
               ))}
             </select>
 
-            {/* Sender District */}
             <select
               {...register("senderdistrict", { required: true })}
               className="select select-bordered w-full mb-4"
               disabled={!senderRegion}
             >
               <option value="">Select District</option>
-              {senderDistricts.map((d, i) => (
-                <option key={i} value={d}>{d}</option>
+              {senderDistricts.map((district, index) => (
+                <option key={index} value={district}>
+                  {district}
+                </option>
               ))}
             </select>
 
@@ -202,26 +263,28 @@ const SendParcel = () => {
               placeholder="Receiver Address"
             />
 
-            {/* Receiver Region */}
             <select
               {...register("receiverregion", { required: true })}
               className="select select-bordered w-full mb-4"
             >
               <option value="">Select Region</option>
-              {regions.map((r, i) => (
-                <option key={i} value={r}>{r}</option>
+              {regions.map((region, index) => (
+                <option key={index} value={region}>
+                  {region}
+                </option>
               ))}
             </select>
 
-            {/* Receiver District */}
             <select
               {...register("receiverdistrict", { required: true })}
               className="select select-bordered w-full mb-4"
               disabled={!receiverRegion}
             >
               <option value="">Select District</option>
-              {receiverDistricts.map((d, i) => (
-                <option key={i} value={d}>{d}</option>
+              {receiverDistricts.map((district, index) => (
+                <option key={index} value={district}>
+                  {district}
+                </option>
               ))}
             </select>
 
@@ -242,7 +305,7 @@ const SendParcel = () => {
 
         {/* ================= Submit ================= */}
         <button className="btn btn-primary mt-8 text-black w-full md:w-auto">
-          Send Parcel
+          Proceed to Confirm Booking
         </button>
 
       </form>
