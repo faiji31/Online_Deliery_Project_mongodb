@@ -1,10 +1,11 @@
 import React from "react";
+import { FaShoppingBag } from "react-icons/fa";
 import { Link, NavLink, Outlet } from "react-router";
 
 const DashboardLayout = () => {
   return (
     <div>
-      <div className="drawer lg:drawer-open">
+      <div className="drawer max-w-7xl mx-auto lg:drawer-open">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
           {/* Navbar */}
@@ -71,7 +72,14 @@ const DashboardLayout = () => {
               </li>
               {/* dashboard items */}
               {
-                 <li> <NavLink to='/dashboard/my-parcels'>My Parcels</NavLink></li>
+                 <li> <NavLink className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="My Parcel" to='/dashboard/my-parcels'
+                   > <FaShoppingBag/>
+
+                  <span className="is-drawer-close:hidden">My Parcels</span>
+                       </NavLink></li>
+
+                  
               }
 
               {/* List item */}
