@@ -1,26 +1,52 @@
-import { useQuery } from '@tanstack/react-query';
-import React from 'react';
-import useAuth from '../../../hooks/useAuth';
-import Useaxiossecure from '../../../hooks/Useaxiossecure';
+import { useQuery } from "@tanstack/react-query";
+import React from "react";
+import useAuth from "../../../hooks/useAuth";
+import Useaxiossecure from "../../../hooks/Useaxiossecure";
 
 const Myparcel = () => {
+  const { user } = useAuth();
+  const AxiosSecure = Useaxiossecure();
 
-      const {user} =useAuth()
-      const AxiosSecure =Useaxiossecure()
+  const { data: parcels = [] } = useQuery({
+    queryKey: ["myparcels", user?.email],
+    queryFn: async () => {
+      const res = await AxiosSecure.get(`/parcels?email=${user.email}`);
+      return res.data;
+    },
+  });
 
-      const {data: parcels = []} = useQuery({
-            queryKey:['myparcels',user?.email],
-            queryFn: async()=>{
-              const res = await AxiosSecure.get(`/parcels?email=${user.email}`)
-              return res.data
-            }
-      })
+  return (
+    <div>
+      <h2>All my Parcels: {parcels.length}</h2>
+      <div className="overflow-x-auto">
+        <table className="table table-zebra">
+          {/* head */}
+          <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Cost</th>
+              <th>Payment Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+             {
+                  parcels.map((parcel,index)=> <tr key={parcel._id}>
+              <th>{index + 1}</th>
+              <td>{parcel.parcelname}</td>
+              <td>{parcel.cost}</td>
+              <td></td>
+              <td></td>
+            </tr>)
+             }
+            
 
-      return (
-            <div>
-                  <h2>All my Parcels: {parcels.length}</h2>
-            </div>
-      );
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 };
 
 export default Myparcel;

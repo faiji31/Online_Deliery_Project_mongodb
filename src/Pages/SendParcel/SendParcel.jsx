@@ -59,6 +59,7 @@ const SendParcel = () => {
     }
 
     console.log("Total Cost:", cost);
+    data.cost = cost;
    
 
     Swal.fire({
