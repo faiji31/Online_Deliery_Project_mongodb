@@ -1,97 +1,119 @@
-import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import useAuth from "../../../hooks/useAuth";
-import Useaxiossecure from "../../../hooks/Useaxiossecure";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router";
+import Swal from "sweetalert2";
 import { FiEdit } from "react-icons/fi";
 import { FaTrashAlt } from "react-icons/fa";
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import Swal from "sweetalert2";
+import useAuth from "../../../hooks/useAuth";
+import Useaxiossecure from "../../../hooks/Useaxiossecure";
 
 const Myparcel = () => {
   const { user } = useAuth();
-  const AxiosSecure = Useaxiossecure();
+  const axiosSecure = Useaxiossecure();
 
-  const { data: parcels = [] , refetch} = useQuery({
+  const {
+    data: parcels = [],
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["myparcels", user?.email],
+    enabled: !!user?.email,
     queryFn: async () => {
-      const res = await AxiosSecure.get(`/parcels?email=${user.email}`);
+      const res = await axiosSecure.get(
+        `/parcels?email=${user.email}`
+      );
       return res.data;
     },
   });
 
-  const handleParcelDelete = id =>{
-    console.log(id)
-
-  
-Swal.fire({
-  title: "Are you sure?",
-  text: "You won't be able to revert this!",
-  icon: "warning",
-  showCancelButton: true,
-  confirmButtonColor: "#3085d6",
-  cancelButtonColor: "#d33",
-  confirmButtonText: "Yes, delete it!"
-}).then((result) => {
-  if (result.isConfirmed) {
-
-    AxiosSecure.delete(`/parcels/${id}`)
-    .then(res=>{
-      console.log(res.data)
-
-      if (res.data.deletedCount){
-        refetch()
-        Swal.fire({
-      
-      title: "Deleted!",
-      text: "Your Parcel has been deleted.",
-      icon: "success"
-    });
-  }
-});
-        
+  const handleParcelDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosSecure.delete(`/parcels/${id}`).then((res) => {
+          if (res.data.deletedCount > 0) {
+            refetch();
+            Swal.fire("Deleted!", "Parcel deleted successfully.", "success");
+          }
+        });
       }
-    })
-    
+    });
+  };
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center mt-10">
+        <span className="loading loading-dots loading-xl"></span>
+      </div>
+    );
   }
 
   return (
-    <div>
-      <h2>All my Parcels: {parcels.length}</h2>
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4">
+        My Parcels ({parcels.length})
+      </h2>
+
       <div className="overflow-x-auto">
         <table className="table table-zebra">
-          {/* head */}
           <thead>
             <tr>
-              <th></th>
+              <th>#</th>
               <th>Name</th>
               <th>Cost</th>
-              <th>Payment Status</th>
+              <th>Payment</th>
+              <th>Delivery Status</th>
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
-             {
-                  parcels.map((parcel,index)=> <tr key={parcel._id}>
-              <th>{index + 1}</th>
-              <td>{parcel.parcelname}</td>
-              <td>{parcel.cost}</td>
-              <td></td>
-              <td>
-                <button className="btn btn-square hover:bg-primary mr-4">
-                  <FiEdit></FiEdit>
-                </button>
-                 <button className="btn btn-square hover:bg-primary mr-4">
-                 <FaMagnifyingGlass />
-                </button>
-                 <button onClick={()=>handleParcelDelete(parcel._id)} className="btn btn-square hover:bg-primary">
-                  <FaTrashAlt />
-                </button>
-              </td>
-            </tr>)
-             }
-            
 
+          <tbody>
+            {parcels.map((parcel, index) => (
+              <tr key={parcel._id}>
+                <th>{index + 1}</th>
+                <td>{parcel.parcelname}</td>
+                <td>৳ {parcel.cost}</td>
+
+                <td>
+                  {parcel.paymentStatus === "paid" ? (
+                    <span className="text-green-500 font-semibold">
+                      Paid
+                    </span>
+                  ) : (
+                    <Link to={`/dashboard/payment/${parcel._id}`}>
+                      <button className="btn btn-primary btn-sm text-black">
+                        Pay
+                      </button>
+                    </Link>
+                  )}
+                </td>
+
+                <td>{parcel.deliveryStatus}</td>
+
+                <td className="space-x-2">
+                  <button className="btn btn-square hover:bg-primary">
+                    <FiEdit />
+                  </button>
+
+                  <button className="btn btn-square hover:bg-primary">
+                    <FaMagnifyingGlass />
+                  </button>
+
+                  <button
+                    onClick={() => handleParcelDelete(parcel._id)}
+                    className="btn btn-square hover:bg-primary"
+                  >
+                    <FaTrashAlt />
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
