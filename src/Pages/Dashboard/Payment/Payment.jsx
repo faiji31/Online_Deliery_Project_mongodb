@@ -45,18 +45,17 @@ const Payment = () => {
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-4">Payment Page</h2>
 
-      <div className="card bg-base-100 shadow-xl p-6">
+     
         <h3 className="text-xl font-semibold">
           Parcel Name: {parcel.parcelname}
         </h3>
-        <p>Cost: ৳ {parcel.cost}</p>
-        <p>Status: {parcel.paymentStatus}</p>
+        <button className="btn btn-primary text-black">Pay</button>
+       
+     
 
-        <button className="btn text-black btn-primary mt-4">
-          Proceed to Payment
-        </button>
+       
       </div>
-    </div>
+ 
   );
 };
 
