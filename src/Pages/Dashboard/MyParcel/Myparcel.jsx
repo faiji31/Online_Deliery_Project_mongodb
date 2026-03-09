@@ -78,7 +78,7 @@ const Myparcel = () => {
               <tr key={parcel._id}>
                 <th>{index + 1}</th>
                 <td>{parcel.parcelname}</td>
-                <td>৳ {parcel.cost}</td>
+                <td>$ {parcel.cost}</td>
 
                 <td>
                   {parcel.paymentStatus === "paid" ? (
