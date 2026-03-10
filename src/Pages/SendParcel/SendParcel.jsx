@@ -1,9 +1,10 @@
-import React, {  useEffect } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import Useaxiossecure from "../../hooks/Useaxiossecure";
-import useAuth from '../../hooks/useAuth'
+import useAuth from "../../hooks/useAuth";
+
 
 const SendParcel = () => {
   const {
@@ -14,14 +15,12 @@ const SendParcel = () => {
     formState: { errors },
   } = useForm();
 
-  const {user} = useAuth()
-
+  const { user } = useAuth();
 
   const AxiosSecure = Useaxiossecure();
 
-
-
   const serviceCenters = useLoaderData() || [];
+  const navigate = useNavigate();
 
   // ===============================
   // HANDLE FORM SUBMIT
@@ -30,8 +29,7 @@ const SendParcel = () => {
     console.log(data);
 
     const isDocument = data.parcelType === "document";
-    const isSameDistrict =
-      data.senderdistrict === data.receiverdistrict;
+    const isSameDistrict = data.senderdistrict === data.receiverdistrict;
 
     const parcelWeight = parseFloat(data.parcelweight) || 0;
 
@@ -60,38 +58,38 @@ const SendParcel = () => {
 
     console.log("Total Cost:", cost);
     data.cost = cost;
-   
 
     Swal.fire({
-  title: "Agree with The cost?",
-  text: `You Will be Charge! ${cost}`,
-  icon: "warning",
-  showCancelButton: true,
-  confirmButtonColor: "#3085d6",
-  cancelButtonColor: "#d33",
-  confirmButtonText: "I Agreee!"
-}).then((result) => {
-  if (result.isConfirmed) {
-
-    AxiosSecure.post('/parcels', data)
-    .then(res=>{
-      console.log(res.data)
-    })
-    // Swal.fire({
-    //   title: "Deleted!",
-    //   text: "Your file has been deleted.",
-    //   icon: "success"
-    // });
-  }
-});
+      title: "Agree with The cost?",
+      text: `You Will be Charge! ${cost}`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Confirm and Continue Payment!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        AxiosSecure.post("/parcels", data).then((res) => {
+          console.log(res.data);
+          if (res.data.insertedId) {
+             navigate('/dashboard/my-parcels')
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Parcel Added Successfully",
+              showConfirmButton: false,
+              timer: 2500,
+            });
+          }
+        });
+      }
+    });
   };
 
   // ===============================
   // UNIQUE REGIONS
   // ===============================
-  const regions = [
-    ...new Set(serviceCenters.map((c) => c.region)),
-  ];
+  const regions = [...new Set(serviceCenters.map((c) => c.region))];
 
   // ===============================
   // WATCH REGIONS
@@ -125,15 +123,12 @@ const SendParcel = () => {
 
   return (
     <div className="bg-base-300 min-h-screen mx-auto max-w-7xl mt-10 p-6 rounded-lg">
-      <h2 className="text-3xl text-secondary font-bold mb-2">
-        Add Parcel
-      </h2>
+      <h2 className="text-3xl text-secondary font-bold mb-2">Add Parcel</h2>
       <p className="text-secondary font-semibold mb-6">
         Enter your parcel details
       </p>
 
       <form onSubmit={handleSubmit(handleParcel)} className="text-black">
-
         {/* ================= Parcel Type ================= */}
         <div className="flex gap-6 mb-6">
           <label className="flex items-center gap-2 cursor-pointer">
@@ -158,9 +153,7 @@ const SendParcel = () => {
         </div>
 
         {errors.parcelType && (
-          <p className="text-red-500 mb-4">
-            Please select parcel type
-          </p>
+          <p className="text-red-500 mb-4">Please select parcel type</p>
         )}
 
         {/* ================= Parcel Info ================= */}
@@ -184,7 +177,6 @@ const SendParcel = () => {
 
         {/* ================= Sender & Receiver ================= */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-
           {/* ================= Sender Info ================= */}
           <div>
             <h2 className="text-2xl font-bold text-secondary mb-4">
@@ -324,7 +316,6 @@ const SendParcel = () => {
         <button className="btn btn-primary mt-8 text-black w-full md:w-auto">
           Proceed to Confirm Booking
         </button>
-
       </form>
     </div>
   );
