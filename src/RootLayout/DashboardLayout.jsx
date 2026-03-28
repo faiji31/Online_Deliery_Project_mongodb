@@ -1,6 +1,7 @@
 import React from "react";
 import { FaShoppingBag } from "react-icons/fa";
 import { Link, NavLink, Outlet } from "react-router";
+import { FaCreditCard } from "react-icons/fa";
 
 const DashboardLayout = () => {
   return (
@@ -44,9 +45,9 @@ const DashboardLayout = () => {
             aria-label="close sidebar"
             className="drawer-overlay"
           ></label>
-          <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
+          <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64 overflow-hidden">
             {/* Sidebar content here */}
-            <ul className="menu w-full grow">
+            <ul className="menu w-full grow overflow-hidden">
               {/* List item */}
               <li>
                 <Link to='/'
@@ -71,16 +72,27 @@ const DashboardLayout = () => {
                 </Link>
               </li>
               {/* dashboard items */}
-              {
-                 <li> <NavLink className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="My Parcel" to='/dashboard/my-parcels'
-                   > <FaShoppingBag/>
+              <li>
+                <NavLink
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="My Parcel"
+                  to="/dashboard/my-parcels"
+                >
+                  <FaShoppingBag />
+                  <span className="truncate">My Parcels</span>
+                </NavLink>
+              </li>
 
-                  <span className="is-drawer-close:hidden">My Parcels</span>
-                       </NavLink></li>
-
-                  
-              }
+              <li>
+                <NavLink
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="Payment History"
+                  to="/dashboard/payment-history"
+                >
+                  <FaCreditCard />
+                  <span className="truncate">Payment History</span>
+                </NavLink>
+              </li>
 
               {/* List item */}
               <li>
