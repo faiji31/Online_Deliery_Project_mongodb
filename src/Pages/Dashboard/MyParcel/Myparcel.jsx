@@ -21,7 +21,7 @@ const Myparcel = () => {
     enabled: !!user?.email,
     queryFn: async () => {
       const res = await axiosSecure.get(
-        `/parcels?email=${user.email}`
+        `/parcels?senderemail=${user.email}`
       );
       return res.data;
     },
@@ -66,6 +66,7 @@ const Myparcel = () => {
             <tr>
               <th>#</th>
               <th>Name</th>
+              <th>Type</th>
               <th>Cost</th>
               <th>Payment</th>
               <th>Delivery Status</th>
@@ -78,6 +79,11 @@ const Myparcel = () => {
               <tr key={parcel._id}>
                 <th>{index + 1}</th>
                 <td>{parcel.parcelname}</td>
+                <td>
+                  <span className={`badge ${parcel.parcelType === "document" ? "badge-info" : "badge-warning"}`}>
+                    {parcel.parcelType === "document" ? "Document" : "Non-Document"}
+                  </span>
+                </td>
                 <td>$ {parcel.cost}</td>
 
                 <td>

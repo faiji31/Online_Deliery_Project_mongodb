@@ -12,6 +12,7 @@ const SendParcel = () => {
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -22,11 +23,21 @@ const SendParcel = () => {
   const serviceCenters = useLoaderData() || [];
   const navigate = useNavigate();
 
+  // Set form values when user data is available
+  useEffect(() => {
+    if (user?.email && user?.displayName) {
+      reset({
+        sendername: user.displayName,
+        senderemail: user.email
+      });
+    }
+  }, [user, reset]);
+
   // ===============================
   // HANDLE FORM SUBMIT
   // ===============================
   const handleParcel = (data) => {
-    console.log(data);
+    console.log("Form Data Submitted:", data);
 
     const isDocument = data.parcelType === "document";
     const isSameDistrict = data.senderdistrict === data.receiverdistrict;
@@ -58,6 +69,10 @@ const SendParcel = () => {
 
     console.log("Total Cost:", cost);
     data.cost = cost;
+    data.paymentStatus = "pending";
+    data.deliveryStatus = "pending";
+
+    console.log("Final Data to Send to Backend:", data);
 
     Swal.fire({
       title: "Agree with The cost?",
@@ -69,19 +84,35 @@ const SendParcel = () => {
       confirmButtonText: "Confirm and Continue Payment!",
     }).then((result) => {
       if (result.isConfirmed) {
-        AxiosSecure.post("/parcels", data).then((res) => {
-          console.log(res.data);
-          if (res.data.insertedId) {
-             navigate('/dashboard/my-parcels')
+        AxiosSecure.post("/parcels", data)
+          .then((res) => {
+            console.log("Response:", res.data);
+            if (res.data.insertedId) {
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Parcel Added Successfully",
+                showConfirmButton: false,
+                timer: 2500,
+              }).then(() => {
+                navigate('/dashboard/my-parcels');
+              });
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: res.data.message || "Failed to add parcel. Please try again.",
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error adding parcel:", error);
             Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: "Parcel Added Successfully",
-              showConfirmButton: false,
-              timer: 2500,
+              icon: "error",
+              title: "Error",
+              text: error.response?.data?.message || error.message || "Failed to add parcel. Please try again.",
             });
-          }
-        });
+          });
       }
     });
   };
@@ -196,7 +227,6 @@ const SendParcel = () => {
               {...register("senderemail", { required: true })}
               className="input input-bordered w-full mb-4"
               placeholder="Sender Email"
-              defaultValue={user?.email}
             />
 
             <input
