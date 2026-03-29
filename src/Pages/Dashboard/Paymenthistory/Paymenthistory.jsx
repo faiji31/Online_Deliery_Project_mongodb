@@ -44,6 +44,7 @@ const Paymenthistory = () => {
                 <th>Parcel Name</th>
                 <th>Amount</th>
                 <th>Transaction Id</th>
+                 <th>Paid Time</th>
                 <th>Status</th>
                 <th>Tracking ID</th>
               </tr>
@@ -55,6 +56,7 @@ const Paymenthistory = () => {
                   <td>{payment.parcelName || "N/A"}</td>
                   <td>${payment.amount || 0}</td>
                   <td>{payment.transactionId || "N/A"}</td>
+                    <td>{payment.paidTime}</td>
                   <td>
                     <span className={`badge ${payment.paymentStatus === 'paid' ? 'badge-success' : 'badge-warning'}`}>
                       {payment.paymentStatus || "Pending"}
