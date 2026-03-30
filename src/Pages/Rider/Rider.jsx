@@ -3,7 +3,7 @@ import React from 'react';
 const Rider = () => {
       return (
             <div>
-                  <h2>This is Rider page</h2>
+                  <h2 className='text-3xl text-secondary'>Be a Rider</h2>
             </div>
       );
 };

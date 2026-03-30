@@ -1,28 +1,43 @@
 import React from "react";
 import useAuth from "../../../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router";
+import Useaxiossecure from "../../../hooks/Useaxiossecure";
 
 const SocialLogin = () => {
-      const { signInGoggle} = useAuth();
+      const { signInGoogle} = useAuth();
       const location = useLocation();
+      const axiosSecure = Useaxiossecure();
       const navigate = useNavigate()
       console.log(location)
-      const handleGoggleSignIn=()=>{
-            signInGoggle()
+      const handleGoogleSignIn=()=>{
+            signInGoogle()
             .then(result=>{
                   console.log(result.user)
-                  navigate(location?.state || '/')
+                  
+
+                   const userInfo ={
+              email: result.user.email,
+              displayName: result.user.displayName,
+              photoURL: result.user.photoURL
+                   }
+                   axiosSecure.post('/users',userInfo)
+                   .then(res=>{
+                    console.log(res.data)
+                    navigate(location?.state || '/')
+                   })
+
+
+                  
             })
             .catch(error=>{
                   console.log(error)
             })
-
       }
   return (
     <div className="text-center">
       <h3 className="mb-1">OR</h3>
       <button
-      onClick={handleGoggleSignIn}
+      onClick={handleGoogleSignIn}
       
       className="btn mx-10 bg-white text-black border-[#e5e5e5]">
         <svg
